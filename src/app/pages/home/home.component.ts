@@ -25,9 +25,11 @@ export class HomeComponent implements OnInit {
         if (data && data.length > 0) {
           this.totalJOs = Array.from(new Set(data.map((i: any) => i.participations.map((f: any) => f.year)).flat())).length;
           const countries: string[] = data.map((i: any) => i.country);
+
           this.totalCountries = countries.length;
           const medals = data.map((i: any) => i.participations.map((i: any) => (i.medalsCount)));
           const sumOfAllMedalsYears = medals.map((i) => i.reduce((acc: any, i: any) => acc + i, 0));
+
           this.buildPieChart(countries, sumOfAllMedalsYears);
         }
       },
@@ -39,6 +41,7 @@ export class HomeComponent implements OnInit {
   }
 
   buildPieChart(countries: string[], sumOfAllMedalsYears: number[]) {
+    console.log(countries, sumOfAllMedalsYears);
     const pieChart = new Chart("DashboardPieChart", {
       type: 'pie',
       data: {
@@ -64,6 +67,8 @@ export class HomeComponent implements OnInit {
         }
       }
     });
+
+    console.log(pieChart)
     this.pieChart = pieChart;
   }
 }
