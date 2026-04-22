@@ -25,7 +25,6 @@ export class HomeComponent implements OnInit {
 
   async ngOnInit() {
     try {
-      console.log('try');
       await this.dataService.loadData();
     }
     catch(e)
