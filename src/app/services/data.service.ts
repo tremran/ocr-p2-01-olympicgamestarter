@@ -35,7 +35,8 @@ export class DataService implements OnInit {
 
   getAllCountries(): string[]
   {
-    return this.data.map((c: Country) => c.name);
+    console.log(this.data);
+    return this.data.map((c: Country) => c.country);
   }
 
   getAllMedalsYears(): number[]
