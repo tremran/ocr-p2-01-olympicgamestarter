@@ -10,6 +10,7 @@ import { DataService } from 'src/app/services/data.service';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
+  public pieChartId = 'chartId';
   public pieChart!: Chart<"pie", number[], string>;
   public totalCountries: number = 0
   public totalJOs: number = 0
@@ -33,17 +34,13 @@ export class HomeComponent implements OnInit {
       this.error = String(e);
     }
     this.totalJOs = await this.dataService.getTotalJos();
-    console.log('totalJOs ', this.totalJOs);
 
     const countries: string[] = this.dataService.getAllCountries();
-    console.log('countries ', countries);
     this.totalCountries = countries.length;
 
     const sumOfAllMedalsYears: number[] = this.dataService.getAllMedalsYears();
-    console.log('sumOfAllMedalsYears ', sumOfAllMedalsYears);
 
-    console.log(countries);
-    this.pieChart = this.chartService.buildPieChart(countries, sumOfAllMedalsYears);
+    this.pieChart = this.chartService.buildPieChart(countries, sumOfAllMedalsYears, this.pieChartId);
   }
 
 }

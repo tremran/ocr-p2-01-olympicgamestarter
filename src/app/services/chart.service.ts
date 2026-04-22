@@ -13,8 +13,8 @@ export class ChartService {
 
     }
 
-  buildPieChart(countries: string[], sumOfAllMedalsYears: number[]) {
-    const pieChart = new Chart("DashboardPieChart", {
+  buildPieChart(countries: string[], sumOfAllMedalsYears: number[], chartId: string) {
+    const pieChart = new Chart(chartId, {
       type: 'pie',
       data: {
         labels: countries,
