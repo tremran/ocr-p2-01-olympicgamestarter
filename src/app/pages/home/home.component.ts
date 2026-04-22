@@ -1,7 +1,7 @@
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import Chart from 'chart.js/auto';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-home',
@@ -16,32 +16,30 @@ export class HomeComponent implements OnInit {
   public error!:string
   titlePage: string = "Medals per Country";
 
-  constructor(private router: Router, private http:HttpClient) { }
+  constructor(private router: Router, private dataService: DataService) { }
 
-  ngOnInit() {
-    this.http.get<any[]>(this.olympicUrl).pipe().subscribe(
-      (data) => {
-        console.log(`Liste des données : ${JSON.stringify(data)}`);
-        if (data && data.length > 0) {
-          this.totalJOs = Array.from(new Set(data.map((i: any) => i.participations.map((f: any) => f.year)).flat())).length;
-          const countries: string[] = data.map((i: any) => i.country);
+  async ngOnInit() {
+    try {
+      await this.dataService.loadData();
+    }
+    catch(e)
+    {
+      // todo gérer l'affichage en cas de non chargement des données
+      this.error = String(e);
+      console.log(e);
+    }
+    this.totalJOs = await this.dataService.getTotalJos();
 
-          this.totalCountries = countries.length;
-          const medals = data.map((i: any) => i.participations.map((i: any) => (i.medalsCount)));
-          const sumOfAllMedalsYears = medals.map((i) => i.reduce((acc: any, i: any) => acc + i, 0));
+    const countries: string[] = this.dataService.getAllCountries();
 
-          this.buildPieChart(countries, sumOfAllMedalsYears);
-        }
-      },
-      (error:HttpErrorResponse) => {
-        console.log(`erreur : ${error}`);
-        this.error = error.message
-      }
-    )
+    this.totalCountries = countries.length;
+
+    const sumOfAllMedalsYears: number[] = this.dataService.getAllMedalsYears();
+
+    this.buildPieChart(countries, sumOfAllMedalsYears);
   }
 
   buildPieChart(countries: string[], sumOfAllMedalsYears: number[]) {
-    console.log(countries, sumOfAllMedalsYears);
     const pieChart = new Chart("DashboardPieChart", {
       type: 'pie',
       data: {
@@ -68,7 +66,6 @@ export class HomeComponent implements OnInit {
       }
     });
 
-    console.log(pieChart)
     this.pieChart = pieChart;
   }
 }
