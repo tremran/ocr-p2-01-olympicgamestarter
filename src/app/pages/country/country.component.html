@@ -10,7 +10,12 @@
     </div>
   </div>
 
-  <canvas id="{{ lineChartId }}">{{ lineChart }}</canvas>
+  <app-chart 
+    [chartId]="lineChartId"
+    [type]="'line'"
+    [labels]="years"
+    [data]="medals"
+  />
   
   <div class="center">
     <a routerLink="">Go back</a>

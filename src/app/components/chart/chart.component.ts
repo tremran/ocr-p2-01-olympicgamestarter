@@ -22,7 +22,6 @@ export class ChartComponent implements OnChanges {
   }
 
   ngOnChanges(): void {
-    console.log('> on change')
     switch (this.type)
     {
       case 'pie':
@@ -33,7 +32,11 @@ export class ChartComponent implements OnChanges {
         }
         break;
       case 'line':
-        this.chart = this.chartService.buildLineChart(this.labels, this.data, this.chartId);
+        if (this.labels && this.data && this.chartId)
+        {
+          this.hideLoader();
+          this.chart = this.chartService.buildLineChart(this.labels, this.data, this.chartId);
+        }
         break;
       default:
         throw 'unknown chart type';

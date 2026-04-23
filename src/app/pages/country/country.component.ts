@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import Chart from 'chart.js/auto';
-import { ChartService } from 'src/app/services/chart.service';
 import { DataService } from 'src/app/services/data.service';
 
 
@@ -12,16 +10,16 @@ import { DataService } from 'src/app/services/data.service';
 })
 export class CountryComponent implements OnInit {
   public lineChartId = 'countryChart';
-  public lineChart!: Chart<"line", number[], string>;
   public titlePage: string = '';
   public totalEntries: number = 0;
   public totalMedals: number = 0;
   public totalAthletes: number = 0;
   public error!: string;
+  public years!: string[];
+  public medals!: number[];
 
   constructor(
     private route: ActivatedRoute, 
-    private chartService: ChartService,
     private dataService: DataService, 
     private router: Router, 
   ) {
@@ -39,11 +37,10 @@ export class CountryComponent implements OnInit {
     }
     this.titlePage = countryName;
     this.totalEntries = this.dataService.getParticipationCountForCountry(countryName);
-    const years = this.dataService.getParticipationYearsForCountry(countryName);
-    const medals = this.dataService.getMedalsForCountry(countryName);
-    this.totalMedals = medals.reduce((accumulator: number, item: number) => accumulator + item, 0);
-
-    this.lineChart = this.chartService.buildLineChart(years, medals, this.lineChartId);
+    this.years = this.dataService.getParticipationYearsForCountry(countryName);
+    this.medals = this.dataService.getMedalsForCountry(countryName);
+    this.totalMedals = this.medals.reduce((accumulator: number, item: number) => accumulator + item, 0);
+    this.totalAthletes = this.dataService.getAthleteCountForCountry(countryName);
 
   }
 
