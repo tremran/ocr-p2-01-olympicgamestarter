@@ -11,8 +11,8 @@ export class DataService implements OnInit {
   private url:string = './assets/mock/olympic.json';
   private data: Country[];
   private error: string;
+  
   constructor(private http: HttpClient ) { 
-    console.log('data constructor');
     this.data = [];
     this.error = '';
   }
@@ -33,10 +33,23 @@ export class DataService implements OnInit {
     this.data = jsonData;
   }
 
+  checkCountryName(countryName: string): boolean 
+  {
+    const countryInfo: Country|null = this.getCountryInfo(countryName);
+
+    return countryInfo !== null;
+  }
+
   getAllCountries(): string[]
   {
-    console.log(this.data);
     return this.data.map((c: Country) => c.country);
+  }
+
+  getMedalsForCountry(countryName: string): string[] {
+    const selectedCountry: Country|null = this.getCountryInfo(countryName);
+    if (selectedCountry === null) return [];
+
+    return selectedCountry.participations.map((p: Participation) => p.medalsCount.toString()) ?? [];
   }
 
   getAllMedalsYears(): number[]
@@ -46,15 +59,45 @@ export class DataService implements OnInit {
         (p: Participation) => (p.medalsCount)
       )
     );
-    return medals.map((i) => i.reduce((acc: any, i: any) => acc + i, 0));
+    return medals.map((i) => i.reduce((acc: number, i: number) => acc + i, 0));
   }
 
-  getError(): string{
-    return this.error;
+  getAthleteCountForCountry(countryName: string): number
+  {
+
+    const selectedCountry: Country|null = this.getCountryInfo(countryName);
+    if (selectedCountry === null) return 0;
+    const nbAthletes = selectedCountry?.participations.map((p: Participation) => p.athleteCount.toString()) ?? []
+    return nbAthletes.reduce((accumulator: number, item: string) => accumulator + parseInt(item), 0);
+  }
+
+  getParticipationCountForCountry(countryName: string): number
+  {
+    const selectedCountry: Country|null = this.getCountryInfo(countryName);
+    if (selectedCountry === null) return 0;
+    return selectedCountry.participations.length;
+  }
+
+  getParticipationYearsForCountry(countryName: string): number[]
+  {
+    const selectedCountry: Country|null = this.getCountryInfo(countryName);
+    if (selectedCountry === null) return [];
+    return selectedCountry.participations.map((p: Participation) => p.year) ?? [];
   }
 
   async getTotalJos(): Promise<number>
   {
     return Array.from(new Set(this.data.map((c: Country) => c.participations.map((p: Participation) => p.year)).flat())).length
+  }
+
+  private getCountryInfo(countryName: string): Country|null
+  {
+    let info = this.data.find((c: Country) => c.country === countryName);
+    if (info === undefined) return null;
+    return info;
+  }
+
+  getError(): string{
+    return this.error;
   }
 }

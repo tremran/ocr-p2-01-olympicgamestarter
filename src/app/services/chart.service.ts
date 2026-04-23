@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Chart } from 'chart.js';
+import Chart from 'chart.js/auto';
 
 @Injectable({
   providedIn: 'root'
@@ -41,5 +41,26 @@ export class ChartService {
     });
 
     return pieChart;
+  }
+
+  buildChart(years: number[], medals: string[], chartId: string) {
+    const lineChart = new Chart(chartId, {
+      type: 'line',
+      data: {
+        labels: years,
+        datasets: [
+          {
+            label: "medals",
+            data: medals,
+            backgroundColor: '#0b868f'
+          },
+        ]
+      },
+      options: {
+        aspectRatio: 2.5
+      }
+    });
+    return lineChart;
+
   }
 }
