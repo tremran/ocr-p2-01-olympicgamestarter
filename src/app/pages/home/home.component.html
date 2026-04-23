@@ -9,5 +9,11 @@
       <app-information [text]="'Number of JOs'" [value]="totalJOs" />
     </div>
   </div>
-  <canvas id="{{ pieChartId }}">{{ pieChart }}</canvas>
+  <app-chart 
+    [chartId]="pieChartId"
+    [type]="'pie'"
+    [labels]="countries"
+    [data]="sumOfAllMedalsYears"
+    [targetPage]="'country'"
+  />
 </div>

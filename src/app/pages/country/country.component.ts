@@ -12,7 +12,7 @@ import { DataService } from 'src/app/services/data.service';
 })
 export class CountryComponent implements OnInit {
   public lineChartId = 'countryChart';
-  public lineChart!: Chart<"line", string[], number>;
+  public lineChart!: Chart<"line", number[], string>;
   public titlePage: string = '';
   public totalEntries: number = 0;
   public totalMedals: number = 0;
@@ -41,9 +41,9 @@ export class CountryComponent implements OnInit {
     this.totalEntries = this.dataService.getParticipationCountForCountry(countryName);
     const years = this.dataService.getParticipationYearsForCountry(countryName);
     const medals = this.dataService.getMedalsForCountry(countryName);
-    this.totalMedals = medals.reduce((accumulator: number, item: string) => accumulator + parseInt(item), 0);
+    this.totalMedals = medals.reduce((accumulator: number, item: number) => accumulator + item, 0);
 
-    this.lineChart = this.chartService.buildChart(years, medals, this.lineChartId);
+    this.lineChart = this.chartService.buildLineChart(years, medals, this.lineChartId);
 
   }
 

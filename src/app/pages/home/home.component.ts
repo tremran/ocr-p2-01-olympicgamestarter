@@ -10,8 +10,9 @@ import { DataService } from 'src/app/services/data.service';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  public pieChartId = 'chartId';
-  public pieChart!: Chart<"pie", number[], string>;
+  public pieChartId: string = 'home-pie-chart';
+  public countries!: string[];
+  public sumOfAllMedalsYears!: number[];
   public totalCountries: number = 0
   public totalJOs: number = 0
   public error!:string
@@ -24,6 +25,7 @@ export class HomeComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
+    console.log('> home init');
     try {
       await this.dataService.loadData();
     }
@@ -34,12 +36,10 @@ export class HomeComponent implements OnInit {
     }
     this.totalJOs = await this.dataService.getTotalJos();
 
-    const countries: string[] = this.dataService.getAllCountries();
-    this.totalCountries = countries.length;
+    this.countries = await this.dataService.getAllCountries();
+    this.totalCountries = this.countries.length;
 
-    const sumOfAllMedalsYears: number[] = this.dataService.getAllMedalsYears();
-
-    this.pieChart = this.chartService.buildPieChart(countries, sumOfAllMedalsYears, this.pieChartId);
+    this.sumOfAllMedalsYears = this.dataService.getAllMedalsYears();
   }
 
 }

@@ -8,19 +8,19 @@ import Chart from 'chart.js/auto';
 
 export class ChartService {
 
-    constructor(private router:Router)
-    {
+  constructor(private router:Router)
+  {
 
-    }
+  }
 
-  buildPieChart(countries: string[], sumOfAllMedalsYears: number[], chartId: string) {
+  buildPieChart(chartLabels: string[], chartData: number[], chartId: string, targetUrl?: string) {
     const pieChart = new Chart(chartId, {
       type: 'pie',
       data: {
-        labels: countries,
+        labels: chartLabels,
         datasets: [{
           label: 'Medals',
-          data: sumOfAllMedalsYears,
+          data: chartData,
           backgroundColor: ['#0b868f', '#adc3de', '#7a3c53', '#8f6263', 'orange', '#94819d'],
           hoverOffset: 4
         }],
@@ -33,7 +33,7 @@ export class ChartService {
             if (points.length) {
               const firstPoint = points[0];
               const countryName = pieChart.data.labels ? pieChart.data.labels[firstPoint.index] : '';
-              this.router.navigate(['country', countryName]);
+              this.router.navigate([targetUrl, countryName]);
             }
           }
         }
@@ -43,15 +43,15 @@ export class ChartService {
     return pieChart;
   }
 
-  buildChart(years: number[], medals: string[], chartId: string) {
+  buildLineChart(chartLabels: string[], chartData: number[], chartId: string) {
     const lineChart = new Chart(chartId, {
       type: 'line',
       data: {
-        labels: years,
+        labels: chartLabels,
         datasets: [
           {
             label: "medals",
-            data: medals,
+            data: chartData,
             backgroundColor: '#0b868f'
           },
         ]

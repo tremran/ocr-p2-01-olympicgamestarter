@@ -45,11 +45,11 @@ export class DataService implements OnInit {
     return this.data.map((c: Country) => c.country);
   }
 
-  getMedalsForCountry(countryName: string): string[] {
+  getMedalsForCountry(countryName: string): number[] {
     const selectedCountry: Country|null = this.getCountryInfo(countryName);
     if (selectedCountry === null) return [];
 
-    return selectedCountry.participations.map((p: Participation) => p.medalsCount.toString()) ?? [];
+    return selectedCountry.participations.map((p: Participation) => p.medalsCount) ?? [];
   }
 
   getAllMedalsYears(): number[]
@@ -78,11 +78,11 @@ export class DataService implements OnInit {
     return selectedCountry.participations.length;
   }
 
-  getParticipationYearsForCountry(countryName: string): number[]
+  getParticipationYearsForCountry(countryName: string): string[]
   {
     const selectedCountry: Country|null = this.getCountryInfo(countryName);
     if (selectedCountry === null) return [];
-    return selectedCountry.participations.map((p: Participation) => p.year) ?? [];
+    return selectedCountry.participations.map((p: Participation) => p.year.toString()) ?? [];
   }
 
   async getTotalJos(): Promise<number>
