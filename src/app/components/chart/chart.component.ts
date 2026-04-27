@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { Chart } from 'chart.js/auto';
+import { AppChartType } from 'src/app/services/chart-type.type';
 import { ChartService } from 'src/app/services/chart.service';
 
 @Component({
@@ -11,7 +12,7 @@ import { ChartService } from 'src/app/services/chart.service';
 })
 export class ChartComponent implements OnChanges {
   @Input() chartId!: string;
-  @Input() type!: string;
+  @Input() type!: AppChartType;
   @Input() labels!: string[];
   @Input() data!: number[];
   @Input() targetPage?: string;

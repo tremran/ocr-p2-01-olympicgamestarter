@@ -16,14 +16,50 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 
 As you can see, an architecture has already been defined for the project. It is just a suggestion, you can choose to use your own. The predefined architecture includes (in addition to the default angular architecture) the following:
 
-- `components` folder: contains every reusable components
 - `pages` folder: contains components used for routing
-- `core` folder: contains the business logic (`services` and `models` folders)
+- `components` folder: contains every reusable components ( used in pages )
+- `models` folder: contains the models defined in the application
+- `services` folder: contains the specific services
 
-I suggest you to start by understanding this starter code. Pay an extra attention to the `app-routing.module.ts` and the `olympic.service.ts`.
+## Component details
 
-Once mastered, you should continue by creating the typescript interfaces inside the `models` folder. As you can see I already created two files corresponding to the data included inside the `olympic.json`. With your interfaces, improve the code by replacing every `any` by the corresponding interface.
+### Chart Component
 
-You're now ready to implement the requested features.
+A convenient way to display a chart.
+Uses the chart service to create a chart.
 
-Good luck!
+To use it provide these values
+
+```ts
+@Input() chartId!: string;    // html selector to locate the chart
+@Input() type!: AppChartType; // line | pie 
+@Input() labels!: string[];
+@Input() data!: number[];
+@Input() targetPage?: string; // for a pie chart, sends the user on "targetPage/[clickedLabel]" if chart is clicked
+```
+
+### Information Component
+
+Provides a reusable HTML component reused troughout the application to display informations
+
+## Services Details
+
+### Chart Service
+
+Provides an interface between the app and the chart module.
+2 chart types are managed so far.
+
+### Data Service
+
+Provides a centralized way to access data.
+
+## How to
+
+### Add a new page
+
+Follow these steps :
+
+1. create a route in app-routing.module.ts
+1. create the component in the page folder
+1. use components to create your page
+1. use / create services if necessary

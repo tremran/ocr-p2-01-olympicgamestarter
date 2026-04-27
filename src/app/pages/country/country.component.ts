@@ -41,7 +41,6 @@ export class CountryComponent implements OnInit {
     this.medals = this.dataService.getMedalsForCountry(countryName);
     this.totalMedals = this.medals.reduce((accumulator: number, item: number) => accumulator + item, 0);
     this.totalAthletes = this.dataService.getAthleteCountForCountry(countryName);
-
   }
 
 }
