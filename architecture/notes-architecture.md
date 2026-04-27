@@ -10,48 +10,53 @@ package "External Ressources" {
     [Chart] as ExternalChart <<lib>>
 }
 
-package "App" {
+package "app" {
     [App Module] as AppM
     [App Component] as AppC
     [Router] as R
 
-    frame "Dashboard" as D {
-        [HomeComponent] <--> ExternalData: reads
-        [HomeComponent] <..> ExternalChart: uses
-        [HomeComponent] -right-> "HTML Dashboard"
-    }
 
-    frame "Country" as C {
-        [CountryComponent] <--> ExternalData: reads
-        [CountryComponent] <..> ExternalChart: uses
-        [CountryComponent] -right-> "HTML Country"
-    }
+    package "pages" {
+        frame "Dashboard" as D {
+            (HTML) as HTMLDashboard
+            [HomeComponent] -right-> (HTMLDashboard)
+        }
+        frame "Country" as C {
+            (HTML) as HTMLCountry
+            [CountryComponent] -right-> (HTMLCountry)
+        }
 
 
-    frame "NotFound" as 404 {
-        [NotFoundComponent] -right-> "HTML 404"
+        frame "NotFound" as 404 {
+            (HTML) as HTML404
+            [NotFoundComponent] -right-> HTML404
+        }
+
     }
 }
 
-AppM -- AppC
-AppC -- R
-R --> D
-R --> C
-R --> 404
+[HomeComponent] --> ExternalData: reads
+[HomeComponent] ..> ExternalChart: uses
+
+
+[CountryComponent] --> ExternalData: reads
+[CountryComponent] ..> ExternalChart: uses
+
+AppM o-- AppC
+AppC o-- R
+R --> pages
 
 @enduml
 ```
-![Ancienne architecture](./architecture/old/dashboard.drawio.png)
+![Ancienne architecture](./old/dashboard.drawio.png)
 
-Les problèmes rencontrés :
+Les problèmes rencontrés par criticité :
 
 - duplication de code
     - récupération des données `this.http.get<any[]>(this.olympicUrl).pipe().subscribe(` 
 - couplage
     - couplage fort entre l'application et le composant de Chart (utilisation directe par les pages)
 - organisation du code
-    - revoir l'arborescence
-    - refactorisation
     - fichiers component volumineux, code à factoriser
     - les données de pays sont récupérées directement dans les pages
     - le fichier de data est dans assets ( disponible directement en téléchargement )
@@ -66,7 +71,7 @@ Les problèmes rencontrés :
 - UX
     - il n'existe pas de demi médaille ( sur pays "Espagne" ) => composant chart à configurer ?
     - absence de header ( pour avoir le nom de l'app sur le détail d'un pays )
-    - absence de navigation
+
 
 ## Step 2 : proposition
 
@@ -77,7 +82,7 @@ En autre les points suivants sont appliqués
 - Ajout de types
 - Séparation du code des composants, pages, models, services et types
 - Si possible avec cette version d'Angular, suppression du module app 
-- création de services pour :
+- Création de services pour :
     - la gestion des charts 
         - création d'une [`factory`](https://refactoring.guru/design-patterns/factory-method) qui utilisera le composant externe chart
         - cela permettra de centraliser la communication avec le composant externe chart
@@ -106,29 +111,15 @@ package "App" {
     [App Component] as AppC
     [Router] as R
 
+
+    package "Pages" {
+        (HTML Page) as HTMLPage
+        [PageComponent] -right-> HTMLPage
+    }
+
     package "Services" as S {
         (Chart) as InternalChart
         (Data) as InternalData
-        InternalChart --> ExternalChart
-        InternalData --> ExternalData
-    }
-
-    package "Pages" {
-        frame "Dashboard Page" as D {
-            [HomeComponent] <--> InternalData: reads
-            [HomeComponent] <..> InternalChart: uses
-            [HomeComponent] -right-> (HTML Dashboard)
-        }
-
-        frame "Country Page" as C {
-            [CountryComponent] <--> InternalData: reads
-            [CountryComponent] <..> InternalChart: uses
-            [CountryComponent] -right-> (HTML Country)
-        }
-
-        frame "Not Found Page" as 404 {
-            [NotFoundComponent] -right-> (HTML 404)
-        }
     }
 
     package "Components" {
@@ -136,19 +127,22 @@ package "App" {
         [Information]
         [Chart]
     }
-
-
 }
 
-AppC -- R
-R --> D
-R --> C
-R --> 404
+AppC *-- R
+R *-- Pages
+HTMLPage o-down- Components
+Components -down-> S
+
+PageComponent --> InternalData
+
+InternalChart --> ExternalChart
+InternalData --> ExternalData
 
 @enduml
 ```
 
-![Nouvelle architecture](./architecture/new/dashboard.drawio.png)
+![Nouvelle architecture](./new/dashboard.drawio.png)
 
 L'arborescence suivante est proposée :
 
@@ -185,4 +179,14 @@ La migration vers la nouvelle architecture se fera étape par étape avec des te
 - création des composants
 - utilisation des composants
 
-## Step 3
+## Step 3 & 4
+
+1. refacto de la page home
+    1. Création des services
+        - data
+        - chart
+    1. Création des composants
+        - information
+        - chart
+2. refacto de la page country
+
