@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="countryFound else notFound">
   <div>
     <div class="center">
       <div>{{ titlePage }}</div>
@@ -21,3 +21,7 @@
     <a routerLink="">Go back</a>
   </div>
 </div>
+
+<ng-template #notFound>
+  <app-not-found [message]="'Country not found'"/>
+</ng-template>

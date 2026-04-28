@@ -1,12 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-not-found',
   templateUrl: './not-found.component.html',
   styleUrls: ['./not-found.component.scss']
 })
-export class NotFoundComponent {
-
+export class NotFoundComponent implements OnInit {
+  @Input() message?: string;
   constructor() { }
+
+  ngOnInit(): void {
+    if (! this.message) this.message = 'No corresponding page found';
+  }
 
 }

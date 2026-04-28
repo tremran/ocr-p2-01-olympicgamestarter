@@ -17,6 +17,7 @@ export class CountryComponent implements OnInit {
   public error!: string;
   public years!: string[];
   public medals!: number[];
+  public countryFound: boolean = true;
 
   constructor(
     private route: ActivatedRoute, 
@@ -32,7 +33,7 @@ export class CountryComponent implements OnInit {
     this.route.paramMap.subscribe((param: ParamMap) => countryName = param.get('countryName'));
     if (! this.dataService.checkCountryName(countryName))
     {
-        // todo 404
+        this.countryFound = false;
         throw 'Country not found';
     }
     this.titlePage = countryName;
