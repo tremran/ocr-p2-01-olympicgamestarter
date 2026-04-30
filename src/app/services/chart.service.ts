@@ -50,7 +50,7 @@ export class ChartService {
         labels: chartLabels,
         datasets: [
           {
-            label: "medals",
+            label: "Medals",
             data: chartData,
             backgroundColor: '#0b868f'
           },

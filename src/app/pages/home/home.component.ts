@@ -1,8 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
-import Chart from 'chart.js/auto';
-import { ChartService } from 'src/app/services/chart.service';
-import { DataService } from 'src/app/services/data.service';
+import { Observable, tap } from 'rxjs';
+import { ObservableDataService } from 'src/app/services/observable-data.service';
 
 @Component({
   selector: 'app-home',
@@ -11,34 +10,28 @@ import { DataService } from 'src/app/services/data.service';
 })
 export class HomeComponent implements OnInit {
   public pieChartId: string = 'home-pie-chart';
-  public countries!: string[];
-  public sumOfAllMedalsYears!: number[];
-  public totalCountries: number = 0
-  public totalJOs: number = 0
-  public error!:string
-  titlePage: string = "Medals per Country";
+  public countries$!: Observable<string[]>;
+  public sumOfAllMedalsYears$!: Observable<number[]>;
+  public totalCountries: number = 0;
+  public totalJOs$!: Observable<number>;
 
   constructor(
     private router: Router, 
-    private dataService: DataService,
-    private chartService: ChartService,
+    private dataService: ObservableDataService,
   ) { }
 
-  async ngOnInit() {
-    try {
-      await this.dataService.loadData();
-    }
-    catch(e)
-    {
-      // todo gérer l'affichage en cas de non chargement des données
-      this.error = String(e);
-    }
-    this.totalJOs = await this.dataService.getTotalJos();
+  ngOnInit() {
 
-    this.countries = await this.dataService.getAllCountries();
-    this.totalCountries = this.countries.length;
+    this.totalJOs$ = this.dataService.getTotalJos();
 
-    this.sumOfAllMedalsYears = this.dataService.getAllMedalsYears();
+    this.countries$ = this.dataService.getAllCountries().pipe(
+      tap((countryList: string[]) => {
+        this.totalCountries = countryList.length;
+      })
+    );
+
+
+    this.sumOfAllMedalsYears$ = this.dataService.getAllMedalsYears();
   }
 
 }

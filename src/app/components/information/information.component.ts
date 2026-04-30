@@ -7,6 +7,6 @@ import { Component, Input } from '@angular/core';
 })
 export class InformationComponent{
   @Input() text!: string;
-  @Input() value!: number;
+  @Input() value!: number|null;
   
 }

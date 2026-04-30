@@ -1,19 +1,19 @@
 
-<div>
+<div *ngIf="countries$ | async">
   <div>
     <div class="center">
-      <div>{{ titlePage }}</div>
+      <div>Medals per country</div>
     </div>
     <div class="split">
       <app-information [text]="'Number of countries'" [value]="totalCountries" />
-      <app-information [text]="'Number of JOs'" [value]="totalJOs" />
+      <app-information [text]="'Number of JOs'" [value]="totalJOs$ | async" />
     </div>
   </div>
-  <app-chart 
+  <app-chart
     [chartId]="pieChartId"
     [type]="'pie'"
-    [labels]="countries"
-    [data]="sumOfAllMedalsYears"
+    [labels]="countries$ | async"
+    [data]="sumOfAllMedalsYears$ | async"
     [targetPage]="'country'"
-  />
+  ></app-chart>
 </div>

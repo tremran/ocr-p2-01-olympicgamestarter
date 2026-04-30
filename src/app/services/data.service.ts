@@ -15,6 +15,8 @@ export class DataService implements OnInit {
   constructor(private http: HttpClient ) { 
     this.data = [];
     this.error = '';
+    console.log('deprecated : use observable-data.service instead');
+    throw 'deprecated : use observable-data.service instead';
   }
 
   async ngOnInit(): Promise<any> {

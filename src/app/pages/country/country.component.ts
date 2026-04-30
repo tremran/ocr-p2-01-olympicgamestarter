@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { DataService } from 'src/app/services/data.service';
+import { Observable, tap } from 'rxjs';
+import { Country } from 'src/app/models/country';
+import { ObservableDataService } from 'src/app/services/observable-data.service';
 
 
 @Component({
@@ -9,39 +11,29 @@ import { DataService } from 'src/app/services/data.service';
   styleUrls: ['./country.component.scss']
 })
 export class CountryComponent implements OnInit {
-  public lineChartId = 'countryChart';
-  public titlePage: string = '';
-  public totalEntries: number = 0;
-  public totalMedals: number = 0;
-  public totalAthletes: number = 0;
+  public lineChartId = 'country-line-chart';
   public error!: string;
-  public years!: string[];
-  public medals!: number[];
-  public countryFound: boolean = true;
+  public country$!: Observable<Country|undefined>;
+  public country!:Country;
 
   constructor(
     private route: ActivatedRoute, 
-    private dataService: DataService, 
+    private dataService: ObservableDataService, 
     private router: Router, 
   ) {
   }
 
-  async ngOnInit() {
-    await this.dataService.loadData();
+  ngOnInit() {
     let countryName: string | null = "";
     
-    this.route.paramMap.subscribe((param: ParamMap) => countryName = param.get('countryName'));
-    if (! this.dataService.checkCountryName(countryName))
-    {
-        this.countryFound = false;
-        throw 'Country not found';
-    }
-    this.titlePage = countryName;
-    this.totalEntries = this.dataService.getParticipationCountForCountry(countryName);
-    this.years = this.dataService.getParticipationYearsForCountry(countryName);
-    this.medals = this.dataService.getMedalsForCountry(countryName);
-    this.totalMedals = this.medals.reduce((accumulator: number, item: number) => accumulator + item, 0);
-    this.totalAthletes = this.dataService.getAthleteCountForCountry(countryName);
+    this.route.paramMap.subscribe(
+      (param: ParamMap) => {
+        countryName = param.get('countryName');
+        this.country$ = this.dataService.getCountryByName(countryName).pipe(
+          tap((country) => {if (country) this.country = Country.fromCountry(country) })
+        );
+      }
+    );
   }
 
 }
