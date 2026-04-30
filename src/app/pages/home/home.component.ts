@@ -30,7 +30,6 @@ export class HomeComponent implements OnInit {
       })
     );
 
-
     this.sumOfAllMedalsYears$ = this.dataService.getAllMedalsYears();
   }
 

@@ -1,14 +1,12 @@
 
 <div *ngIf="countries$ | async">
-  <div>
-    <div class="center">
-      <div>Medals per country</div>
-    </div>
-    <div class="split">
-      <app-information [text]="'Number of countries'" [value]="totalCountries" />
-      <app-information [text]="'Number of JOs'" [value]="totalJOs$ | async" />
-    </div>
-  </div>
+    <app-page-header
+  [pageTitle]="'Medals per country'"
+  [informations]="[
+    {text : 'Number of countries', value: totalCountries},
+    {text: 'Number of JOs', value: totalJOs$ | async}
+  ]"
+  ></app-page-header>
   <app-chart
     [chartId]="pieChartId"
     [type]="'pie'"

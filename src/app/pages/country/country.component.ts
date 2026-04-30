@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
+import { AppInformation } from 'src/app/components/information/information.type';
 import { Country } from 'src/app/models/country';
 import { ObservableDataService } from 'src/app/services/observable-data.service';
 
@@ -15,6 +16,7 @@ export class CountryComponent implements OnInit {
   public error!: string;
   public country$!: Observable<Country|undefined>;
   public country!:Country;
+  public headerInfo!:AppInformation[];
 
   constructor(
     private route: ActivatedRoute, 
@@ -30,7 +32,14 @@ export class CountryComponent implements OnInit {
       (param: ParamMap) => {
         countryName = param.get('countryName');
         this.country$ = this.dataService.getCountryByName(countryName).pipe(
-          tap((country) => {if (country) this.country = Country.fromCountry(country) })
+          tap((country) => {
+            if (country) this.country = Country.fromCountry(country) 
+            this.headerInfo = [
+              {text:'Number of entries', value :this.country.participations.length},
+              {text:'Total Number of medals', value :this.country.medalsCount},
+              {text:'Total Number of athletes', value :this.country.athletesCount},
+            ];
+          })
         );
       }
     );

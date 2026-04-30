@@ -1,0 +1,13 @@
+  <div>
+    <div class="center">
+      <div>{{ pageTitle }}</div>
+    </div>
+    <div class="split">
+      @for(currentInfo of informations; track currentInfo.text)
+      {
+        <app-information [info]="currentInfo"/>
+
+      }
+
+    </div>
+  </div>

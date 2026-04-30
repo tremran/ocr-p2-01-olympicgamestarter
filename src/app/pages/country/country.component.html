@@ -1,14 +1,8 @@
 <div *ngIf="country$ | async else notFound">
-  <div>
-    <div class="center">
-      <div>{{ country.country }}</div>
-    </div>
-    <div class="split">
-      <app-information [text]="'Number of entries'" [value]="country.participations.length" />
-      <app-information [text]="'Total Number of medals'" [value]="country.medalsCount" />
-      <app-information [text]="'Total Number of athletes'" [value]="country.athletesCount" />
-    </div>
-  </div>
+  <app-page-header
+  [pageTitle]="country.country"
+  [informations]="headerInfo"
+  ></app-page-header>
 
   <app-chart
     [chartId]="lineChartId"
