@@ -1,8 +1,8 @@
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
 import { Participation } from '../models/participation';
 import { Country } from '../models/country';
-import { map, Observable } from 'rxjs';
+import { delay, map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,25 +10,27 @@ import { map, Observable } from 'rxjs';
 
 export class ObservableDataService {
   private url:string = './assets/mock/olympic.json';
+  private delay: number = 300;
   
   constructor(private http: HttpClient ) { }
-
-  getCountryList(): Observable<Country[]>
-  {
-    return this.http.get<Country[]>(this.url);
-  }
 
   getCountryByName(countryName: string|null): Observable<Country|undefined>
   {
     return this.http.get<Country[]>(this.url).pipe(
-      map((countryList) => countryList.find((country) => country.country === countryName))
+      // delay(this.delay),
+      map((countryList) => countryList.find((country) => country.country === countryName)),
+      map((country) => country ? Country.fromCountry(country) : undefined)
     );
+    
   }
 
   getAllCountries(): Observable<string[]>
   {
     return this.http.get<Country[]>(this.url).pipe(
-      map((countryList) => countryList.map((c: Country) => c.country))
+      delay(this.delay), // todo comment this
+      map((countryList) => {
+        return countryList.map((c: Country) => c.country)}
+      )
     );
   }
 

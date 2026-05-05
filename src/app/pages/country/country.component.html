@@ -1,7 +1,11 @@
-<div *ngIf="country$ | async else notFound">
+<div *ngIf="country$ | async as country else infoMessage">
   <app-page-header
   [pageTitle]="country.country"
-  [informations]="headerInfo"
+  [informations]="[
+                    {text:'Number of entries', value : country.participations.length},
+                    {text:'Total Number of medals', value : country.medalsCount},
+                    {text:'Total Number of athletes', value : country.athletesCount},
+                  ]"
   ></app-page-header>
 
   <app-chart
@@ -16,6 +20,6 @@
   </div>
 </div>
 
-<ng-template #notFound>
-  <app-not-found [message]="'Country not found'"/>
+<ng-template #infoMessage>
+  <app-not-found [message]="message"/>
 </ng-template>

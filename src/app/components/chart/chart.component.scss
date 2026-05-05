@@ -6,13 +6,13 @@
 
 .container {
     width: 50%;
+    text-align: center;
     h2{
-        text-align: center;
         color: gray;
     }
 }
 
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 600px) {
     .container {
         width: 100%;
     }

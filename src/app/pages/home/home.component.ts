@@ -14,6 +14,7 @@ export class HomeComponent implements OnInit {
   public sumOfAllMedalsYears$!: Observable<number[]>;
   public totalCountries: number = 0;
   public totalJOs$!: Observable<number>;
+  public message: string = 'data loading';
 
   constructor(
     private router: Router, 
@@ -21,12 +22,15 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    setTimeout(() => this.message = 'An error occured, please try again later', 2000);
 
     this.totalJOs$ = this.dataService.getTotalJos();
 
     this.countries$ = this.dataService.getAllCountries().pipe(
       tap((countryList: string[]) => {
-        this.totalCountries = countryList.length;
+        if (countryList) {
+          this.totalCountries = countryList.length;
+        }
       })
     );
 

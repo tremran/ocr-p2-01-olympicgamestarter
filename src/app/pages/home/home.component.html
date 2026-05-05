@@ -1,17 +1,22 @@
 
-<div *ngIf="countries$ | async">
+<div *ngIf="countries$ | async else infoMessage">
     <app-page-header
   [pageTitle]="'Medals per country'"
   [informations]="[
     {text : 'Number of countries', value: totalCountries},
     {text: 'Number of JOs', value: totalJOs$ | async}
   ]"
-  ></app-page-header>
+  />
   <app-chart
     [chartId]="pieChartId"
     [type]="'pie'"
     [labels]="countries$ | async"
     [data]="sumOfAllMedalsYears$ | async"
     [targetPage]="'country'"
-  ></app-chart>
+  />
 </div>
+
+<ng-template #infoMessage>
+
+  <app-not-found [message]="message"/>
+</ng-template>
