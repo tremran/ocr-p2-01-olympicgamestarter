@@ -5,18 +5,23 @@
 ```plantuml
 @startuml
 
-package "External Ressources" {
+node "External Ressources" {
     database "data" as ExternalData <<csv>>
     [Chart] as ExternalChart <<lib>>
 }
 
-package "app" {
+folder "app" {
     [App Module] as AppM
     [App Component] as AppC
     [Router] as R
 
 
-    package "pages" {
+    folder "pages" {
+        frame "NotFound" as 404 {
+            (HTML) as HTML404
+            [NotFoundComponent] -right-> HTML404
+        }
+
         frame "Dashboard" as D {
             (HTML) as HTMLDashboard
             [HomeComponent] -right-> (HTMLDashboard)
@@ -24,12 +29,6 @@ package "app" {
         frame "Country" as C {
             (HTML) as HTMLCountry
             [CountryComponent] -right-> (HTMLCountry)
-        }
-
-
-        frame "NotFound" as 404 {
-            (HTML) as HTML404
-            [NotFoundComponent] -right-> HTML404
         }
 
     }
@@ -102,27 +101,27 @@ En autre les points suivants sont appliqués
 ```plantuml
 @startuml
 
-package "External Ressources" {
+node "External Ressources" {
     database "data" as ExternalData <<csv>>
     [Chart] as ExternalChart <<lib>>
 }
 
-package "App" {
+folder "App" {
     [App Component] as AppC
     [Router] as R
 
 
-    package "Pages" {
+    folder "Pages" {
         (HTML Page) as HTMLPage
         [PageComponent] -right-> HTMLPage
     }
 
-    package "Services" as S {
+    folder "Services" as S {
         (Chart) as InternalChart
         (Data) as InternalData
     }
 
-    package "Components" {
+    folder "Components" {
         [Header]
         [Information]
         [Chart]
@@ -130,7 +129,7 @@ package "App" {
 }
 
 AppC *-- R
-R *-- Pages
+R --> Pages
 HTMLPage o-down- Components
 Components -down-> S
 
