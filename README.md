@@ -1,5 +1,7 @@
 # OlympicGamesStarter
 
+Get source code on [the github repository](../Baltide_Gregory_1_Repo_052026.zip)
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.6.
 
 Don't forget to install your node_modules before starting (`npm install`).
