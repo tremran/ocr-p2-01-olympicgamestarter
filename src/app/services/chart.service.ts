@@ -22,7 +22,7 @@ export class ChartService {
           label: 'Medals',
           data: chartData,
           backgroundColor: ['#0b868f', '#adc3de', '#7a3c53', '#8f6263', 'orange', '#94819d'],
-          hoverOffset: 4
+          // hoverOffset: 4
         }],
       },
       options: {
